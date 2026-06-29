@@ -239,6 +239,11 @@ final class TabOverview: UIView {
         presentation.prepareDismissSelection(to: index, mode: mode, previewImage: previewImage)
     }
     
+    func prepareDismissSelectionForCurrentTab() {
+        guard let dataSource else { return }
+        presentation.prepareDismissSelection(to: dataSource.selectedIndex, mode: dataSource.selectedMode, previewImage: nil)
+    }
+    
     // MARK: - View Setup
     
     private func configureAppearance() {

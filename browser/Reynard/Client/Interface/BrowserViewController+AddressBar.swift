@@ -126,14 +126,6 @@ extension BrowserViewController: AddressBarDelegate, AddressBarGestureDelegate {
     }
     
     func selectTabFromGesture(at index: Int, mode: TabMode) {
-        if mode == tabManager.selectedTabMode,
-           index != tabManager.selectedTabIndex {
-            captureThumbnail(forTabAt: tabManager.selectedTabIndex, mode: tabManager.selectedTabMode) { [weak self] _ in
-                self?.tabManager.selectTab(at: index, mode: mode)
-            }
-            return
-        }
-        
         tabManager.selectTab(at: index, mode: mode)
     }
     
@@ -155,6 +147,7 @@ extension BrowserViewController: AddressBarDelegate, AddressBarGestureDelegate {
     
     func addressBarGestureWillBegin() {
         browserChrome.dismissActionBar(animated: false)
+        captureThumbnail(forTabAt: tabManager.selectedTabIndex, mode: tabManager.selectedTabMode)
     }
     
     // MARK: - Page Zoom

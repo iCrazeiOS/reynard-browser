@@ -72,6 +72,7 @@ extension TabOverviewCollection: UICollectionViewDataSource, UICollectionViewDel
             to: destinationIndexPath.item,
             mode: tabMode.tabMode
         )
+        refreshTabIdentitySnapshot()
     }
     
     func collectionView(
