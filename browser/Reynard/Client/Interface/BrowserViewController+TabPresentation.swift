@@ -34,7 +34,7 @@ extension BrowserViewController: TabBarDataSource, TabOverviewDataSource, TabOve
     }
     
     func closeTab(at index: Int, mode: TabMode) {
-        if tabOverview.isPresented,
+        if (tabOverview.isPresented || tabOverview.isTransitionRunning),
            tabOverview.mode == .regularTabs,
            mode == .regular,
            tabManager.regularTabs.count == 1 {
