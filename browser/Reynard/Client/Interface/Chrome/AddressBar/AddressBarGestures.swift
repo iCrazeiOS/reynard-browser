@@ -459,13 +459,19 @@ final class AddressBarGestures: NSObject {
         horizontalDirection = 0
         delegate.transitionContentView.setTransitionTransform(.identity)
         addressBar.transform = .identity
+        delegate.transitionContentView.setTransitionHidden(true)
+        addressBar.isHidden = true
         delegate.selectTabFromGesture(at: targetIndex, mode: mode)
+        barHost?.layoutIfNeeded()
+        let targetBarFinalFrame = barHost.map { restingFrame(of: addressBar, in: $0) }
         
         UIView.animate(withDuration: UX.addressBarTabSwitchTransitionDuration, delay: 0, options: [.curveEaseOut]) {
             outgoingContent.frame = outgoingFinalFrame
             targetContent?.frame = clipView.bounds
             outgoingBar?.transform = CGAffineTransform(translationX: remainingTranslation, y: 0)
-            targetBar?.transform = CGAffineTransform(translationX: remainingTranslation, y: 0)
+            if let targetBarFinalFrame {
+                targetBar?.frame = targetBarFinalFrame
+            }
         } completion: { _ in
             clipView.removeFromSuperview()
             outgoingBar?.removeFromSuperview()
@@ -473,6 +479,8 @@ final class AddressBarGestures: NSObject {
             self.horizontalFinishingViews.removeAll { view in
                 view === clipView || view === outgoingBar || view === targetBar
             }
+            delegate.transitionContentView.setTransitionHidden(false)
+            self.addressBar.isHidden = false
         }
     }
     
