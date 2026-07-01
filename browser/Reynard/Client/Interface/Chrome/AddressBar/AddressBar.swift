@@ -440,6 +440,10 @@ final class AddressBar: UIView {
         gestures?.resetHorizontalTransition()
     }
     
+    func performAfterTransition(_ completion: @escaping () -> Void) -> Bool {
+        gestures?.performAfterTransition(completion) ?? false
+    }
+    
     func animateAutomaticNewTabTransition(to tab: Tab, completion: @escaping () -> Void) {
         gestures?.animateAutomaticNewTabTransition(to: tab, completion: completion)
     }

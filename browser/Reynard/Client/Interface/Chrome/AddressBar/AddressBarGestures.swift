@@ -61,6 +61,7 @@ final class AddressBarGestures: NSObject {
     private var horizontalTargetContentView: UIView?
     private var horizontalTargetBarView: UIView?
     private var horizontalFinishingViews: [UIView] = []
+    private var transitionCompletion: (() -> Void)?
     
     init(addressBar: AddressBar, delegate: AddressBarGestureDelegate) {
         self.addressBar = addressBar
@@ -105,12 +106,28 @@ final class AddressBarGestures: NSObject {
         horizontalDirection = 0
     }
     
+    func performAfterTransition(_ completion: @escaping () -> Void) -> Bool {
+        guard !horizontalFinishingViews.isEmpty else {
+            return false
+        }
+        
+        transitionCompletion = completion
+        return true
+    }
+    
     private func clearHorizontalFinishingViews() {
         horizontalFinishingViews.forEach {
             $0.layer.removeAllAnimations()
             $0.removeFromSuperview()
         }
         horizontalFinishingViews.removeAll()
+        transitionCompletion = nil
+    }
+    
+    private func runTransitionCompletion() {
+        let completion = transitionCompletion
+        transitionCompletion = nil
+        completion?()
     }
     
     func animateAutomaticNewTabTransition(completion: @escaping () -> Void) {
@@ -481,6 +498,7 @@ final class AddressBarGestures: NSObject {
             }
             delegate.transitionContentView.setTransitionHidden(false)
             self.addressBar.isHidden = false
+            self.runTransitionCompletion()
         }
     }
     
@@ -532,6 +550,7 @@ final class AddressBarGestures: NSObject {
             self.horizontalFinishingViews.removeAll { view in
                 view === clipView || view === outgoingBar
             }
+            self.runTransitionCompletion()
         }
     }
     

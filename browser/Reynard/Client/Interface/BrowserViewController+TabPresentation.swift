@@ -108,6 +108,12 @@ extension BrowserViewController: TabBarDataSource, TabOverviewDataSource, TabOve
     
     func setTabOverviewVisible(_ visible: Bool, animated: Bool) {
         if visible {
+            if browserChrome.performAfterTransition({ [weak self] in
+                self?.setTabOverviewVisible(true, animated: animated)
+            }) {
+                return
+            }
+            
             dismissAddressBarEditingAndOverlays()
             contentView.resetFocusedInputRelocation()
             homepageOverlayCoordinator.tabOverviewWillPresent()
