@@ -87,6 +87,14 @@ extension BrowserViewController: AddressBarDelegate, AddressBarGestureDelegate {
         presentBookmarkEditor(addToFavorites: favorites)
     }
     
+    func addressBarShareableURL(_ addressBar: AddressBar) -> URL? {
+        guard let selectedTab = tabManager.selectedTab else {
+            return nil
+        }
+        
+        return tabManager.shareableURL(for: selectedTab)
+    }
+    
     // MARK: - AddressBarGestureDelegate
     
     var transitionContainerView: UIView {
