@@ -132,11 +132,14 @@ extension BrowserViewController: AddressBarDelegate, AddressBarGestureDelegate {
     func createTabForSwipe() -> Int {
         captureThumbnail(forTabAt: tabManager.selectedTabIndex, mode: tabManager.selectedTabMode)
         homepageOverlayCoordinator.prepareHomepageForNewTab(mode: tabManager.selectedTabMode)
-        let index = tabManager.createTab(selecting: true)
+        let index = tabManager.createTab(selecting: false)
         applyNewTabDisplayOption(toTabAt: index)
+        if let tab = tabManager.activeTabs[safe: index] {
+            tab.thumbnail = homepageOverlayCoordinator.previewImage(for: tab, size: contentView.bounds.size)
+        }
         return index
     }
-    
+
     func setPendingTabExpansion(at index: Int?) {
         tabBar.setPendingExpansion(at: index)
     }
